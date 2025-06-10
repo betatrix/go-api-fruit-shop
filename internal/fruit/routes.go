@@ -6,8 +6,11 @@ import (
 )
 
 func RegisterFruitRoutes(r *gin.Engine, db *gorm.DB) {
+	repo := NewFruitRepository(db)
+	service := NewFruitService(repo)
+	handler := NewFruitHandler(service)
 
-	// r.POST("/fruits", handler.CreateFruits)
+	r.POST("/fruits", handler.CreateFruits)
 	// r.GET("/fruit/:id", handler.GetFruit)
 	// r.GET("/fruits/{id}")
 	// r.PUT("/fruits/{id}")
