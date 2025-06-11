@@ -13,7 +13,7 @@ func RegisterFruitRoutes(r *gin.Engine, db *gorm.DB) {
 	r.POST("/fruits", handler.CreateFruits)
 	r.GET("/fruits/:id", handler.GetFruitbyID)
 	r.GET("/fruits", handler.GetAllFruits)
-	// r.PUT("/fruits/{id}")
+	r.PUT("/fruits/:id", handler.UpdateFruit)
 	// r.DELETE("/fruits/{id}")
 
 }

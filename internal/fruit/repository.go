@@ -42,3 +42,12 @@ func (r *FruitRepository) GetAll() (*[]Fruit, error) {
 
 	return &fruits, nil
 }
+
+func (r *FruitRepository) Update(fruit *Fruit) error {
+	result := r.db.Model(&fruit).Updates(fruit)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}

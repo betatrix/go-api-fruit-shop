@@ -35,13 +35,13 @@ func (h *FruitHandler) CreateFruits(c *gin.Context) {
 func (h *FruitHandler) GetFruitbyID(c *gin.Context) {
 	id := c.Param("id")
 
-	fruit, err := h.service.GetFruitbyID(id)
+	fruitCreated, err := h.service.GetFruitbyID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, fruit)
+	c.JSON(http.StatusOK, fruitCreated)
 }
 
 // TODO: cache with Redis
@@ -56,9 +56,25 @@ func (h *FruitHandler) GetAllFruits(c *gin.Context) {
 }
 
 func (h *FruitHandler) UpdateFruit(c *gin.Context) {
+	var data FruitRequest
+	id := c.Param("id")
 
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON:" + err.Error()})
+		return
+	}
+
+	fruitUpdated, err := h.service.UpdateFruit(id, data)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, fruitUpdated)
 }
 
+// TODO: soft delete
 func (h *FruitHandler) DeleteFruit(c *gin.Context) {
 
 }
