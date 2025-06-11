@@ -14,8 +14,9 @@ func NewFruitHandler(service *FruitService) *FruitHandler {
 	return &FruitHandler{service: service}
 }
 
+// TODO: Only admin
 func (h *FruitHandler) CreateFruits(c *gin.Context) {
-	var data []FruitRequest
+	var data FruitsDTO
 
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
@@ -23,15 +24,16 @@ func (h *FruitHandler) CreateFruits(c *gin.Context) {
 		return
 	}
 
-	fruit, err := h.service.CreateFruits(data)
+	fruitCreated, err := h.service.CreateFruits(data)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, fruit)
+	c.JSON(http.StatusCreated, fruitCreated)
 }
 
+// TODO: Admin and user
 func (h *FruitHandler) GetFruitbyID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -44,6 +46,7 @@ func (h *FruitHandler) GetFruitbyID(c *gin.Context) {
 	c.JSON(http.StatusOK, fruitCreated)
 }
 
+// TODO: Admin and user
 // TODO: cache with Redis
 func (h *FruitHandler) GetAllFruits(c *gin.Context) {
 	fruits, err := h.service.GetAllFruits()
@@ -55,8 +58,9 @@ func (h *FruitHandler) GetAllFruits(c *gin.Context) {
 	c.JSON(http.StatusOK, fruits)
 }
 
+// TODO: Only admin
 func (h *FruitHandler) UpdateFruit(c *gin.Context) {
-	var data FruitRequest
+	var data FruitDTO
 	id := c.Param("id")
 
 	err := c.ShouldBindJSON(&data)
@@ -74,6 +78,7 @@ func (h *FruitHandler) UpdateFruit(c *gin.Context) {
 	c.JSON(http.StatusCreated, fruitUpdated)
 }
 
+// TODO: Only admin
 func (h *FruitHandler) DeleteFruit(c *gin.Context) {
 	id := c.Param("id")
 

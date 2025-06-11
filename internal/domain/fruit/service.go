@@ -12,10 +12,10 @@ func NewFruitService(repo *FruitRepository) *FruitService {
 	return &FruitService{repo: repo}
 }
 
-func (s *FruitService) CreateFruits(fruits []FruitRequest) ([]Fruit, error) {
+func (s *FruitService) CreateFruits(fruits FruitsDTO) ([]Fruit, error) {
 	var createdFruits []Fruit
 
-	for _, value := range fruits {
+	for _, value := range fruits.Fruits {
 		if value.Name == nil || *value.Name == "" {
 			return nil, errors.ErrEmptyFruitName
 		}
@@ -61,7 +61,7 @@ func (s *FruitService) GetAllFruits() (*[]Fruit, error) {
 	return fruits, nil
 }
 
-func (s *FruitService) UpdateFruit(fruitID string, newFruitData FruitRequest) (*Fruit, error) {
+func (s *FruitService) UpdateFruit(fruitID string, newFruitData FruitDTO) (*Fruit, error) {
 	if fruitID == "" {
 		return nil, errors.ErrInvalidFruitID
 	}

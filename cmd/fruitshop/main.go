@@ -4,20 +4,17 @@ import (
 	"log"
 
 	"github.com/betatrix/go-api-fruit-shop/internal/config"
-	"github.com/betatrix/go-api-fruit-shop/internal/fruit"
+	"github.com/betatrix/go-api-fruit-shop/internal/domain/fruit"
+	"github.com/betatrix/go-api-fruit-shop/internal/domain/user"
 	"github.com/betatrix/go-api-fruit-shop/internal/router"
-	"github.com/betatrix/go-api-fruit-shop/internal/user"
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
-)
-
-var (
-	db *gorm.DB    = config.ConnectDB()
-	r  *gin.Engine = router.Router(db)
 )
 
 func main() {
 	config.GetEnv()
+
+	db := config.ConnectDB()
+	r := router.Router(db)
+
 	defer config.DisconnectDB(db)
 
 	err := db.AutoMigrate(&fruit.Fruit{}, &user.User{})

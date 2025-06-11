@@ -17,21 +17,16 @@ type Fruit struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
-type FruitRequest struct {
+type FruitDTO struct {
 	Name     *string  `json:"name"`
 	Price    *float64 `json:"price"`
 	StockQty *int     `json:"stock_qty"`
 }
 
-type FruitsRequest struct {
-	Fruits []FruitRequest `json:"fruits"`
+type FruitsDTO struct {
+	Fruits []FruitDTO `json:"fruits"`
 }
 
-type FruitIDRequest struct {
-	ID uuid.UUID `json:"id"`
-}
-
-// Função construtora
 func NewFruitModel(name string, price float64, stockQty int) Fruit {
 	return Fruit{
 		ID:        uuid.New().String(),
