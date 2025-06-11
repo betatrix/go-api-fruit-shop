@@ -19,11 +19,17 @@ var (
 func main() {
 	err := db.AutoMigrate(&fruit.Fruit{}, &user.User{})
 	if err != nil {
-		log.Fatal("Erro ao fazer AutoMigrate:", err)
+		log.Fatal("Error during AutoMigrate:", err)
 	}
 
-	log.Println("Banco de dados migrado com sucesso!")
+	log.Println("Database migrated successfully!")
 
 	defer config.DisconnectDB(db)
-	router.Run(":8080")
+
+	err = router.Run(":8080")
+	if err != nil {
+		log.Fatal("Error connecting to server:", err)
+	}
+
+	log.Println("Connected to port: 8080")
 }

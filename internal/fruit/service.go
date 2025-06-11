@@ -39,3 +39,16 @@ func (s *FruitService) CreateFruits(fruits []FruitRequest) ([]Fruit, error) {
 
 	return createdFruits, nil
 }
+
+func (s *FruitService) GetFruitbyID(fruitID string) (*Fruit, error) {
+	if fruitID == "" {
+		return nil, errors.New("invalid data")
+	}
+
+	fruit, err := s.repo.GetByID(fruitID)
+	if err != nil {
+		return nil, err
+	}
+
+	return fruit, nil
+}

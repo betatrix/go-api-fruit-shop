@@ -19,7 +19,7 @@ func (h *FruitHandler) CreateFruits(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "JSON inválido:" + err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON:" + err.Error()})
 		return
 	}
 
@@ -32,8 +32,16 @@ func (h *FruitHandler) CreateFruits(c *gin.Context) {
 	c.JSON(http.StatusCreated, fruit)
 }
 
-func (h *FruitHandler) GetFruit(c *gin.Context) {
+func (h *FruitHandler) GetFruitbyID(c *gin.Context) {
+	id := c.Param("id")
 
+	fruit, err := h.service.GetFruitbyID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, fruit)
 }
 
 func (h *FruitHandler) GetAllFruits(c *gin.Context) {

@@ -11,7 +11,7 @@ func RegisterFruitRoutes(r *gin.Engine, db *gorm.DB) {
 	handler := NewFruitHandler(service)
 
 	r.POST("/fruits", handler.CreateFruits)
-	// r.GET("/fruit/:id", handler.GetFruit)
+	r.GET("/fruit/:id", handler.GetFruitbyID)
 	// r.GET("/fruits/{id}")
 	// r.PUT("/fruits/{id}")
 	// r.DELETE("/fruits/{id}")

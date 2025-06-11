@@ -20,3 +20,14 @@ func (r *FruitRepository) Create(fruit *Fruit) error {
 
 	return nil
 }
+
+func (r *FruitRepository) GetByID(fruitID string) (*Fruit, error) {
+	var fruit Fruit
+
+	result := r.db.First(&fruit, "id = ?", fruitID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &fruit, nil
+}
