@@ -74,15 +74,14 @@ func (h *FruitHandler) UpdateFruit(c *gin.Context) {
 	c.JSON(http.StatusCreated, fruitUpdated)
 }
 
-// TODO: soft delete
 func (h *FruitHandler) DeleteFruit(c *gin.Context) {
 	id := c.Param("id")
 
-	err := h.service.DeleteFruit(id)
+	successMsg, err := h.service.DeleteFruit(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, "Fruit ID:"+id+" - Deleted with success!")
+	c.JSON(http.StatusOK, successMsg)
 }

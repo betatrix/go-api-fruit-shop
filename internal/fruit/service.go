@@ -1,7 +1,7 @@
 package fruit
 
 import (
-	"errors"
+	"github.com/betatrix/go-api-fruit-shop/internal/errors"
 )
 
 type FruitService struct {
@@ -12,23 +12,21 @@ func NewFruitService(repo *FruitRepository) *FruitService {
 	return &FruitService{repo: repo}
 }
 
-// TODO: ajustar validações
 func (s *FruitService) CreateFruits(fruits []FruitRequest) ([]Fruit, error) {
-	var name string
-	var price float64
-	var stockQty int
 	var createdFruits []Fruit
 
 	for _, value := range fruits {
-		name = *value.Name
-		price = *value.Price
-		stockQty = *value.StockQty
-
-		if name == "" || price < 0 || stockQty < 0 {
-			return nil, errors.New("invalid data")
+		if value.Name == nil || *value.Name == "" {
+			return nil, errors.ErrEmptyFruitName
+		}
+		if value.Price == nil || *value.Price <= 0 {
+			return nil, errors.ErrInvalidFruitPrice
+		}
+		if value.StockQty == nil || *value.StockQty <= 0 {
+			return nil, errors.ErrInvalidFruitStockQty
 		}
 
-		fruit := NewFruitModel(name, price, stockQty)
+		fruit := NewFruitModel(*value.Name, *value.Price, *value.StockQty)
 
 		err := s.repo.Create(&fruit)
 		if err != nil {
@@ -41,10 +39,9 @@ func (s *FruitService) CreateFruits(fruits []FruitRequest) ([]Fruit, error) {
 	return createdFruits, nil
 }
 
-// TODO: ajustar validações
 func (s *FruitService) GetFruitbyID(fruitID string) (*Fruit, error) {
 	if fruitID == "" {
-		return nil, errors.New("invalid data")
+		return nil, errors.ErrInvalidFruitID
 	}
 
 	fruit, err := s.repo.GetByID(fruitID)
@@ -55,7 +52,6 @@ func (s *FruitService) GetFruitbyID(fruitID string) (*Fruit, error) {
 	return fruit, nil
 }
 
-// TODO: ajustar validações
 func (s *FruitService) GetAllFruits() (*[]Fruit, error) {
 	fruits, err := s.repo.GetAll()
 	if err != nil {
@@ -67,7 +63,7 @@ func (s *FruitService) GetAllFruits() (*[]Fruit, error) {
 
 func (s *FruitService) UpdateFruit(fruitID string, newFruitData FruitRequest) (*Fruit, error) {
 	if fruitID == "" {
-		return nil, errors.New("invalid fruit ID")
+		return nil, errors.ErrInvalidFruitID
 	}
 
 	currentFruit, err := s.repo.GetByID(fruitID)
@@ -77,19 +73,19 @@ func (s *FruitService) UpdateFruit(fruitID string, newFruitData FruitRequest) (*
 
 	if newFruitData.Name != nil {
 		if *newFruitData.Name == "" {
-			return nil, errors.New("name cannot be empty")
+			return nil, errors.ErrEmptyFruitName
 		}
 		currentFruit.Name = *newFruitData.Name
 	}
 	if newFruitData.Price != nil {
 		if *newFruitData.Price <= 0 {
-			return nil, errors.New("price cannot be equal to or less than zero")
+			return nil, errors.ErrInvalidFruitPrice
 		}
 		currentFruit.Price = *newFruitData.Price
 	}
 	if newFruitData.StockQty != nil {
 		if *newFruitData.StockQty <= 0 {
-			return nil, errors.New("stock quantity cannot be equal to or less than zero")
+			return nil, errors.ErrInvalidFruitStockQty
 		}
 		currentFruit.StockQty = *newFruitData.StockQty
 	}
@@ -103,11 +99,13 @@ func (s *FruitService) UpdateFruit(fruitID string, newFruitData FruitRequest) (*
 }
 
 // TODO: ajustar validações
-func (s *FruitService) DeleteFruit(fruitID string) error {
+func (s *FruitService) DeleteFruit(fruitID string) (string, error) {
 	err := s.repo.Delete(fruitID)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	successMsg := "Fruit ID:" + fruitID + " - Deleted with success!"
+
+	return successMsg, nil
 }

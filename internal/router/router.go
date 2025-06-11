@@ -1,4 +1,4 @@
-package routes
+package router
 
 import (
 	"github.com/betatrix/go-api-fruit-shop/internal/fruit"
