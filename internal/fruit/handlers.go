@@ -44,8 +44,15 @@ func (h *FruitHandler) GetFruitbyID(c *gin.Context) {
 	c.JSON(http.StatusOK, fruit)
 }
 
+// TODO: cache with Redis
 func (h *FruitHandler) GetAllFruits(c *gin.Context) {
+	fruits, err := h.service.GetAllFruits()
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
 
+	c.JSON(http.StatusOK, fruits)
 }
 
 func (h *FruitHandler) UpdateFruit(c *gin.Context) {

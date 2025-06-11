@@ -12,6 +12,7 @@ func NewFruitService(repo *FruitRepository) *FruitService {
 	return &FruitService{repo: repo}
 }
 
+// TODO: ajustar validações
 func (s *FruitService) CreateFruits(fruits []FruitRequest) ([]Fruit, error) {
 	var name string
 	var price float64
@@ -40,6 +41,7 @@ func (s *FruitService) CreateFruits(fruits []FruitRequest) ([]Fruit, error) {
 	return createdFruits, nil
 }
 
+// TODO: ajustar validações
 func (s *FruitService) GetFruitbyID(fruitID string) (*Fruit, error) {
 	if fruitID == "" {
 		return nil, errors.New("invalid data")
@@ -51,4 +53,14 @@ func (s *FruitService) GetFruitbyID(fruitID string) (*Fruit, error) {
 	}
 
 	return fruit, nil
+}
+
+// TODO: ajustar validações
+func (s *FruitService) GetAllFruits() (*[]Fruit, error) {
+	fruits, err := s.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	return fruits, nil
 }

@@ -31,3 +31,14 @@ func (r *FruitRepository) GetByID(fruitID string) (*Fruit, error) {
 
 	return &fruit, nil
 }
+
+func (r *FruitRepository) GetAll() (*[]Fruit, error) {
+	var fruits []Fruit
+
+	result := r.db.Find(&fruits)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &fruits, nil
+}
