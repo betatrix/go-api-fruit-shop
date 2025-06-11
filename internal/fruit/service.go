@@ -101,3 +101,13 @@ func (s *FruitService) UpdateFruit(fruitID string, newFruitData FruitRequest) (*
 
 	return currentFruit, nil
 }
+
+// TODO: ajustar validações
+func (s *FruitService) DeleteFruit(fruitID string) error {
+	err := s.repo.Delete(fruitID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
