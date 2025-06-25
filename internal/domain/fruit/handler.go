@@ -37,13 +37,13 @@ func (h *FruitHandler) CreateFruits(c *gin.Context) {
 func (h *FruitHandler) GetFruitbyID(c *gin.Context) {
 	id := c.Param("id")
 
-	fruitCreated, err := h.service.GetFruitbyID(id)
+	fruit, err := h.service.GetFruitbyID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, fruitCreated)
+	c.JSON(http.StatusOK, fruit)
 }
 
 // TODO: Admin and user

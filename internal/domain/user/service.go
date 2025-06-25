@@ -52,3 +52,25 @@ func (s *UserService) CreateUser(userReq UserDTO) (*User, error) {
 
 	return &user, nil
 }
+
+func (s *UserService) GetUserbyID(userID string) (*User, error) {
+	if userID == "" {
+		return nil, errors.ErrInvalidUserID
+	}
+
+	user, err := s.repo.GetByID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *UserService) GetAllUsers() (*[]User, error) {
+	users, err := s.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

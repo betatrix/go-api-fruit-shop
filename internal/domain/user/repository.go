@@ -18,3 +18,25 @@ func (r *UserRepository) Create(user *User) error {
 
 	return nil
 }
+
+func (r *UserRepository) GetByID(userID string) (*User, error) {
+	var user User
+
+	result := r.db.First(&user, "id = ?", userID)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
+}
+
+func (r *UserRepository) GetAll() (*[]User, error) {
+	var users []User
+
+	result := r.db.Find(&users)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &users, nil
+}

@@ -11,6 +11,7 @@ func RegisterUserRoutes(r *gin.Engine, db *gorm.DB) {
 	handler := NewUserHandler(service)
 
 	r.POST("/users", handler.CreateUser)
+	r.GET("/users/:id", handler.GetUserByID)
+	r.GET("/users/", handler.GetAllUsers)
 	// r.POST("/auth/login")
-	// r.GET("/users")
 }
