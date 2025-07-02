@@ -10,8 +10,9 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) Create(user *User) error {
-	result := r.db.Create(&user)
+// Creates a new user
+func (r *UserRepository) Create(userReq *User) error {
+	result := r.db.Create(&userReq)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -19,6 +20,7 @@ func (r *UserRepository) Create(user *User) error {
 	return nil
 }
 
+// Searches and returns the user by id
 func (r *UserRepository) GetByID(userID string) (*User, error) {
 	var user User
 
@@ -30,6 +32,7 @@ func (r *UserRepository) GetByID(userID string) (*User, error) {
 	return &user, nil
 }
 
+// List all users
 func (r *UserRepository) GetAll() (*[]User, error) {
 	var users []User
 
@@ -39,4 +42,16 @@ func (r *UserRepository) GetAll() (*[]User, error) {
 	}
 
 	return &users, nil
+}
+
+// List all users
+func (r *UserRepository) FindUser(userReq *UserLoginDTO) (*User, error) {
+	var user User
+
+	result := r.db.First(&user, "username = ?", userReq.Username)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
 }

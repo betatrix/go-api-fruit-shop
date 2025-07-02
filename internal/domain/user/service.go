@@ -74,3 +74,36 @@ func (s *UserService) GetAllUsers() (*[]User, error) {
 
 	return users, nil
 }
+
+func (s *UserService) Login(userReq UserLoginDTO) (string, error) {
+	// TODO: tranformar em função essas validações
+	if userReq.Username == nil || *userReq.Username == "" {
+		return "", errors.ErrEmptyUsername
+	}
+	if utf8.RuneCountInString(*userReq.Username) < 3 {
+		return "", errors.ErrInvalidUsername
+	}
+	if userReq.Password == nil {
+		return "", errors.ErrEmptyPassword
+	}
+	if utf8.RuneCountInString(*userReq.Password) < 5 {
+		return "", errors.ErrInvalidPassword
+	}
+
+	user, err := s.repo.FindUser(&userReq)
+	if err != nil {
+		return "", errors.ErrInvalidUserCredentials
+	}
+
+	passwordMatches := utils.VerifyPassword(*userReq.Password, user.HashPassword)
+	if !passwordMatches {
+		return "", errors.ErrInvalidUserCredentials
+	}
+
+	tokenCreated, err := utils.CreateToken(user.Username, string(user.Role))
+	if err != nil {
+		return "", err
+	}
+
+	return tokenCreated, nil
+}

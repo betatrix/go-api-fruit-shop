@@ -14,6 +14,7 @@ func NewUserHandler(service *UserService) *UserHandler {
 	return &UserHandler{service: service}
 }
 
+// Only admin
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var data UserDTO
 
@@ -32,6 +33,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, userCreated)
 }
 
+// Only admin
 func (h *UserHandler) GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -44,6 +46,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// Only admin
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	users, err := h.service.GetAllUsers()
 	if err != nil {
@@ -52,4 +55,23 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, users)
+}
+
+// Only admin
+func (h *UserHandler) LoginHandler(c *gin.Context) {
+	var data UserLoginDTO
+
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON:" + err.Error()})
+		return
+	}
+
+	tokenUserAuth, err := h.service.Login(data)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, tokenUserAuth)
 }

@@ -24,6 +24,11 @@ type UserDTO struct {
 	Role     *string `json:"role"`
 }
 
+type UserLoginDTO struct {
+	Username *string `json:"username"`
+	Password *string `json:"password"`
+}
+
 func NewUserModel(username string, password string, role enums.Role) User {
 	return User{
 		ID:           uuid.New().String(),
